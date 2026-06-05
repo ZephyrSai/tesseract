@@ -188,6 +188,16 @@ main { position: relative; z-index: 2; }
 }
 .quote cite i { text-transform: none; letter-spacing: normal; }
 
+/* the full Pale Blue Dot passage — denser so it fits one screen */
+.quote--long {
+  font-size: clamp(0.8rem, 1.55vw, 1.08rem);
+  line-height: 1.62;
+  max-width: 46rem;
+  margin: 1.1rem auto 0;
+  text-align: left;
+}
+.quote--long cite { margin-top: 1.2rem; }
+
 /* scroll hint */
 .scroll-hint {
   margin-top: 3rem;
@@ -224,6 +234,18 @@ main { position: relative; z-index: 2; }
 }
 .replay:hover { transform: translateY(-2px); border-color: var(--accent); }
 .credit { margin-top: 1.6rem; font-size: 0.72rem; letter-spacing: 0.14em; color: var(--ink-faint); }
+.credit--dedication {
+  margin-top: 1.6rem;
+  font-size: clamp(0.82rem, 1.6vw, 0.98rem);
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+}
+.credit--dedication strong { color: var(--accent); font-weight: 500; }
+.credit--dedication + .credit { margin-top: 0.6rem; }
+
+/* the closing chapter holds a long quote — top-align + tighter title so it fits */
+.chapter[data-index="15"] .chapter__sticky { align-items: flex-start; padding-top: clamp(1.6rem, 6vh, 4.5rem); }
+.chapter[data-index="15"] .title { font-size: clamp(2.1rem, 6vw, 4.2rem); margin-bottom: 0.7rem; }
 
 /* ========== UI chrome ========== */
 .ui { position: fixed; z-index: 10; }
