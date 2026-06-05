@@ -157,14 +157,17 @@ function hideHint() {
   if (hint) hint.classList.add('hidden');
 }
 function firstGesture(e) {
-  if (audioStarted) return;
+  // Sound is on by default but browsers require a gesture to unlock audio.
+  // Some mobile browsers (e.g. Opera/Android) only unlock on touchend/click, and
+  // an early scroll can fire before the context unlocks — so retry on EVERY
+  // gesture until the AudioContext is genuinely running, then stop.
+  if (audio.ctx && audio.ctx.state === 'running') return;
   if (e && e.target && e.target.closest && e.target.closest('.ui')) return; // controls handle themselves
   audioStarted = true;
   audio.play();
   hideHint();
 }
-// sound on by default: start on the very first interaction of any kind
-['pointerdown', 'keydown', 'wheel', 'touchstart', 'scroll'].forEach((ev) =>
+['pointerdown', 'pointerup', 'touchstart', 'touchend', 'click', 'keydown', 'wheel', 'scroll'].forEach((ev) =>
   window.addEventListener(ev, firstGesture, { passive: true })
 );
 
@@ -310,7 +313,11 @@ function frame() {
   // camera from the active chapter, smoothly damped
   const act = journey.chapters[active];
   const pose = act.camera(states[active].lp, time);
-  desiredPos.copy(pose.pos);
+  // portrait framing: dolly the camera straight back so wide scenes fit narrow
+  // screens (keeps composition; just shrinks everything to fit).
+  const aspect = innerWidth / Math.max(1, innerHeight);
+  const fit = aspect < 1 ? 1 + (1 - aspect) * 1.15 : 1;
+  desiredPos.copy(pose.pos).sub(pose.target).multiplyScalar(fit).add(pose.target);
   desiredTarget.copy(pose.target);
   const f = 1 - Math.exp(-2.6 * dt);
   camPos.lerp(desiredPos, f);

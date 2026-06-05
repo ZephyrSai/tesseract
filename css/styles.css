@@ -330,8 +330,12 @@ html.is-dragging body {
 
 @media (max-width: 640px) {
   .ctrl__label { display: none; }
-  .ctrl { padding: 0.6rem; }
-  .progress__label { min-width: 4rem; font-size: 0.72rem; }
+  .ctrl { padding: 0.55rem; }
+  .ctrl__icon { font-size: 0.9rem; }
+  /* slimmer, more discreet seek bar */
+  .ui--progress { gap: 0.55rem; padding: 0 0.9rem calc(0.6rem + env(safe-area-inset-bottom)); }
+  .progress__label { min-width: 0; font-size: 0.6rem; letter-spacing: 0.1em; white-space: nowrap; }
+  .progress__track { height: 1.5px; }
   .chapter[data-index="3"] .chapter__content,
   .chapter[data-index="6"] .chapter__content,
   .chapter[data-index="9"] .chapter__content,

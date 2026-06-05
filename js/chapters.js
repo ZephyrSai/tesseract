@@ -45,10 +45,9 @@ export function buildJourney(palette) {
   const themed = [];
   const onResize = [];
   const V = (x, y, z) => new THREE.Vector3(x, y, z);
-  const aspectFit = (s = 1) => {
-    const a = window.innerWidth / Math.max(1, window.innerHeight);
-    return a < 1 ? 1 + (1 - a) * s : 1;
-  };
+  // Portrait framing is handled by ONE global camera pull-back in main.js, so the
+  // per-chapter distances below are the (correct) landscape values. Neutral here.
+  const aspectFit = () => 1;
 
   function themeMat(m, role, glow) {
     themed.push((p) => {
@@ -226,7 +225,7 @@ export function buildJourney(palette) {
     const L = 6;
     const line = fatLine([-L, 0, 0, L, 0, 0], 'primary', 3.5, 1);
     group.add(line);
-    [-4.2, -1.6, 3.0, 4.8].forEach((x) => {
+    [-2.6, -1.2, 1.6, 2.6].forEach((x) => {
       const n = sprite('secondary', 0.4, 0.9);
       n.position.set(x, 0, 0);
       group.add(n);
@@ -241,9 +240,9 @@ export function buildJourney(palette) {
       update(lp, t, w, dt = 0.016) {
         const grow = smootherstep(0, 0.25, lp);
         line.scale.set(grow, 1, 1);
-        const auto = Math.sin(t * 0.6) * 4.6 * grow;
+        const auto = Math.sin(t * 0.6) * 2.4 * grow;
         if (!grabbed) disp += (auto - disp) * (1 - Math.exp(-1.8 * dt));
-        const x = clamp(disp, -5.6, 5.6);
+        const x = clamp(disp, -3.2, 3.2);
         me.position.set(x, 0, 0);
         meCore.position.set(x, 0, 0);
         grab.position.set(x, 0, 0);
@@ -255,7 +254,7 @@ export function buildJourney(palette) {
       interactive: {
         objects: [{ id: 'me', mesh: grab.userData.proxy }],
         grab() { grabbed = true; },
-        drag(id, ndc, d) { disp = clamp(disp + d.x * 6.5, -5.6, 5.6); },
+        drag(id, ndc, d) { disp = clamp(disp + d.x * 6.5, -3.2, 3.2); },
         release() { grabbed = false; },
       },
     };
@@ -319,11 +318,11 @@ export function buildJourney(palette) {
       update(lp, t, w, dt = 0.016) {
         if (!grabbed) {
           const az = Math.cos(t * 0.35) * 3.4;
-          const ax = Math.sin(t * 0.2) * 1.2;
+          const ax = Math.sin(t * 0.2) * 0.9;
           cz += (az - cz) * (1 - Math.exp(-1.6 * dt));
           cx += (ax - cx) * (1 - Math.exp(-1.6 * dt));
         }
-        cz = clamp(cz, -4.4, 4.4); cx = clamp(cx, -3, 3);
+        cz = clamp(cz, -4.4, 4.4); cx = clamp(cx, -2.4, 2.4);
         disc.position.set(cx, 0.04, cz);
         discFill.position.set(cx, 0.03, cz);
         grab.position.set(cx, 0.2, cz);
@@ -343,7 +342,7 @@ export function buildJourney(palette) {
       interactive: {
         objects: [{ id: 'disc', mesh: grab.userData.proxy }],
         grab() { grabbed = true; },
-        drag(id, ndc, d) { cx = clamp(cx + d.x * 7, -3, 3); cz = clamp(cz - d.y * 7, -4.4, 4.4); },
+        drag(id, ndc, d) { cx = clamp(cx + d.x * 7, -2.4, 2.4); cz = clamp(cz - d.y * 7, -4.4, 4.4); },
         release() { grabbed = false; },
       },
     };
@@ -353,12 +352,12 @@ export function buildJourney(palette) {
   chapter(() => {
     const group = new THREE.Group();
     const cube = cubeEdges(2, 'primary', 0.9, 2);
-    cube.position.set(-2.6, 0.3, 0);
+    cube.position.set(-1.95, 0.3, 0);
     const sphMat = new THREE.MeshStandardMaterial({ transparent: true, roughness: 0.3, metalness: 0.1, emissiveIntensity: 0.15 });
     sphMat.userData.baseOpacity = 1; sphMat.emissive = new THREE.Color();
     themed.push((p) => { sphMat.color.setHex(p.secondary); sphMat.emissive.setHex(p.secondary); });
     const sph = new THREE.Mesh(new THREE.SphereGeometry(1.0, 32, 24), sphMat);
-    sph.position.set(2.6, 0.3, 0);
+    sph.position.set(1.95, 0.3, 0);
     const apl = appleMesh();
     apl.position.set(0, 0.2, 0);
     const ax = basicLines([0, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, 1.6], 'accent', 0.7);
@@ -542,7 +541,7 @@ export function buildJourney(palette) {
   // ============ CH10 — Perpendicular to Everything (the ladder) ============
   chapter(() => {
     const group = new THREE.Group();
-    const xs = [-4.2, -2.1, 0, 2.1, 4.2];
+    const xs = [-3.7, -1.85, 0, 1.85, 3.7];
     const pt = sprite('accent', 0.7, 1); pt.position.set(xs[0], 0, 0);
     const ln = fatLine([xs[1], -0.9, 0, xs[1], 0.9, 0], 'primary', 3, 1);
     const sq = fatLine([
