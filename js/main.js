@@ -166,6 +166,24 @@ themeBtn.querySelector('.ctrl__label').textContent = themeMgr.current === 'dark'
 function hideHint() {
   if (hint) hint.classList.add('hidden');
 }
+
+// Begin button: a guaranteed tap that unlocks audio (scrolling alone won't), then
+// glides into the journey so the score is already playing by the time you arrive.
+const enterBtn = document.getElementById('enterBtn');
+if (enterBtn) {
+  enterBtn.addEventListener('click', () => {
+    audioStarted = true;
+    audio.play();
+    soundBtn.classList.remove('is-pending');
+    enterBtn.classList.add('hidden');
+    const s1 = sections[1];
+    if (s1) {
+      const top = s1.getBoundingClientRect().top + window.scrollY;
+      const travel = s1.getBoundingClientRect().height - innerHeight;
+      window.scrollTo({ top: Math.round(top + travel * 0.4), behavior: 'smooth' });
+    }
+  });
+}
 function firstGesture(e) {
   // Sound is on by default but browsers require a gesture to unlock audio.
   // Some mobile browsers (e.g. Opera/Android) only unlock on touchend/click, and

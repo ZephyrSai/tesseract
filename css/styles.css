@@ -198,9 +198,31 @@ main { position: relative; z-index: 2; }
 }
 .quote--long cite { margin-top: 1.2rem; }
 
+/* primary entry button — one tap unlocks audio, then scroll into the journey */
+.enter {
+  margin-top: 2.4rem;
+  font-family: var(--sans);
+  font-size: clamp(0.95rem, 2.4vw, 1.1rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--panel-hi);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0.95rem 2.3rem;
+  border-radius: 999px;
+  cursor: pointer;
+  animation: tapRing 2.4s ease-out infinite;
+  transition: transform 0.3s var(--ease), border-color 0.3s var(--ease), opacity 0.6s var(--ease);
+}
+.enter:hover { transform: translateY(-2px); border-color: var(--accent); }
+.enter__note { color: var(--accent); }
+.enter.hidden { opacity: 0; pointer-events: none; transform: translateY(8px); }
+
 /* scroll hint */
 .scroll-hint {
-  margin-top: 3rem;
+  margin-top: 1.6rem;
   display: flex;
   flex-direction: column;
   align-items: center;
