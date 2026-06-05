@@ -7,20 +7,26 @@ works in both light and dark.
 
 ## The journey
 
+16 chapters. ✦ = a draggable hotspot you can grab (mouse or touch).
+
 | # | Chapter | What it shows |
 |---|---------|---------------|
 | 0 | The Pale Blue Dot | Opening in deep space, a tiny blue dot, Sagan's words |
 | 1 | The Point (0D) | A dimensionless singularity |
-| 2 | The Line (1D) | A Linelander gliding on its one-dimensional thread |
-| 3 | The Plane (2D) | Flatland — an infinite glowing sheet of graph paper |
-| 4 | A Visitor From Above (2D→1D) | A 2D disc crossing the 1D line; the Linelander sees only two points |
+| 2 | The Line (1D) ✦ | Drag the Linelander along its one-dimensional thread |
+| 3 | The Plane (2D) ✦ | Drag the Flatlander across an infinite sheet of graph paper |
+| 4 | A Visitor From Above (2D→1D) ✦ | Drag a 2D disc across the 1D line; watch the Linelander see only points |
 | 5 | Space (3D) | Solid cube, sphere and apple with their three axes |
-| 6 | The Apple in Flatland (3D→2D) | Sagan's apple falling *through* the graph paper, leaving cross-sections + an ink-stamp |
-| 7 | Pages of Time | The apple rebuilt by stacking 2D slices like pages in a book |
-| 8 | Smeared Across Time | A worldline through spacetime, with a sweeping "now" plane |
-| 9 | Perpendicular to Everything | The ladder: point → line → square → cube → tesseract |
-| 10 | The Tesseract | A fully animated 4D hypercube, rotating in 4D and projected into 3D |
-| 11 | The Pale Blue Dot | Zoom back out; the closing meditation |
+| 6 | The Surgeon From Space (3D→2D) | A 3D being sees and reaches a Flatlander's *insides* from "above" |
+| 7 | The Apple in Flatland (3D→2D) ✦ | Drag Sagan's apple *through* the page; watch the cross-sections bloom |
+| 8 | Pages of Time ✦ | Drag to fan the stacked 2D slices apart and back into a solid |
+| 9 | Smeared Across Time ✦ | Drag the "now" along a worldline through spacetime |
+| 10 | Perpendicular to Everything | The ladder: point → line → square → cube → tesseract |
+| 11 | The Tesseract ✦ | A 4D hypercube — **grab it and rotate it through the fourth dimension** |
+| 12 | A Tesseract Through Our World (4D→3D) ✦ | Drag a tesseract through our space; see its real 3D cross-sections morph |
+| 13 | The Hypercube, Unfolded ✦ | Drag to fold/unfold the Dalí cross of eight cubes |
+| 14 | What the Fourth Could Do | The powers of a 4D being — sealed rooms, knots, hearts |
+| 15 | The Pale Blue Dot | Zoom back out; the closing meditation |
 
 ## Running it
 
@@ -43,9 +49,12 @@ server works too (e.g. `python3 -m http.server 4321`).
 ## Controls
 
 - **Scroll** to travel the journey.
+- **Drag the glowing ✦ handles** to grab and move things — slide creatures, push
+  the apple through the page, rotate the tesseract in 4D, fold the net, and more.
+  Page scrolling pauses only while you're actually dragging a handle.
 - **◐ / Dark·Light** — toggle theme (remembered across visits; dark by default).
-- **♪ Sound** — start/stop the generative score. (It also starts on your first
-  click/keypress anywhere; mute any time.)
+- **♪ Sound** — the generative score is **on by default** and begins on your first
+  interaction (scroll/tap); mute any time.
 
 ## How it's built
 

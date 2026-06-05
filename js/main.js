@@ -139,6 +139,7 @@ function setSoundUI(on) {
   soundBtn.querySelector('.ctrl__label').textContent = on ? 'Sound on' : 'Sound off';
 }
 audio.onState(setSoundUI);
+setSoundUI(true); // sound is on by default; it begins on the first interaction
 
 soundBtn.addEventListener('click', () => {
   audioStarted = true;
@@ -157,27 +158,90 @@ function hideHint() {
 }
 function firstGesture(e) {
   if (audioStarted) return;
-  if (e.target && e.target.closest && e.target.closest('.ui')) return; // controls handle themselves
+  if (e && e.target && e.target.closest && e.target.closest('.ui')) return; // controls handle themselves
   audioStarted = true;
   audio.play();
   hideHint();
 }
-window.addEventListener('pointerdown', firstGesture);
-window.addEventListener('keydown', firstGesture);
-window.addEventListener('wheel', () => hideHint(), { once: true, passive: true });
+// sound on by default: start on the very first interaction of any kind
+['pointerdown', 'keydown', 'wheel', 'touchstart', 'scroll'].forEach((ev) =>
+  window.addEventListener(ev, firstGesture, { passive: true })
+);
 
 // replay buttons (data-scroll-top)
 document.querySelectorAll('[data-scroll-top]').forEach((b) =>
   b.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }))
 );
 
+// ---------------- grab & drag interaction ----------------
+// Raycast the active chapter's hotspot proxies. While dragging we freeze page
+// scroll (touchmove/wheel preventDefault) so the gesture moves the object, not
+// the page. Touch anywhere that isn't a hotspot still scrolls normally.
+const raycaster = new THREE.Raycaster();
+const ptr = new THREE.Vector2();
+let drag = null;
+
+function setPtr(e) {
+  ptr.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+}
+function hitActive() {
+  const ch = journey.chapters[activeIndex];
+  if (!ch || !ch.interactive) return null;
+  raycaster.setFromCamera(ptr, camera);
+  const objs = ch.interactive.objects.map((o) => o.mesh);
+  const hits = raycaster.intersectObjects(objs, false);
+  if (!hits.length) return null;
+  const entry = ch.interactive.objects.find((o) => o.mesh === hits[0].object);
+  return entry ? { ch, id: entry.id } : null;
+}
+
+window.addEventListener('pointerdown', (e) => {
+  if (e.target && e.target.closest && e.target.closest('.ui')) return;
+  setPtr(e);
+  const h = hitActive();
+  if (!h) return;
+  drag = { ch: h.ch, id: h.id, lx: ptr.x, ly: ptr.y };
+  h.ch.interactive.grab && h.ch.interactive.grab(h.id);
+  document.documentElement.classList.add('is-dragging');
+  e.preventDefault();
+});
+
+window.addEventListener('pointermove', (e) => {
+  if (drag) {
+    setPtr(e);
+    const dx = ptr.x - drag.lx;
+    const dy = ptr.y - drag.ly;
+    drag.lx = ptr.x;
+    drag.ly = ptr.y;
+    drag.ch.interactive.drag && drag.ch.interactive.drag(drag.id, { x: ptr.x, y: ptr.y }, { x: dx, y: dy });
+  } else {
+    if (e.target && e.target.closest && e.target.closest('.ui')) { document.body.style.cursor = ''; return; }
+    setPtr(e);
+    document.body.style.cursor = hitActive() ? 'grab' : '';
+  }
+});
+
+function endDrag() {
+  if (!drag) return;
+  drag.ch.interactive.release && drag.ch.interactive.release(drag.id);
+  drag = null;
+  document.documentElement.classList.remove('is-dragging');
+  document.body.style.cursor = '';
+}
+window.addEventListener('pointerup', endDrag);
+window.addEventListener('pointercancel', endDrag);
+// keep a drag gesture from scrolling the page
+window.addEventListener('touchmove', (e) => { if (drag) e.preventDefault(); }, { passive: false });
+window.addEventListener('wheel', (e) => { if (drag) e.preventDefault(); }, { passive: false });
+
 // ---------------- camera choreography ----------------
 const camPos = new THREE.Vector3(0, 0, 11);
 const camTarget = new THREE.Vector3(0, 0, 0);
 const desiredPos = new THREE.Vector3();
 const desiredTarget = new THREE.Vector3();
+let activeIndex = 0;
 
-const ROMAN = ['✦', '0', 'I', 'II', 'II · I', 'III', 'III · II', 'TIME', 'SPACETIME', 'IV', 'TESSERACT', '∞'];
+const ROMAN = ['✦', '0', '1D', '2D', '2D · 1D', '3D', '3D › 2D', 'STAMP', 'TIME', 'SPACETIME', '→ 4D', '4D', '4D › 3D', 'NET', 'BEYOND', '∞'];
 
 // ---------------- main loop ----------------
 const clock = new THREE.Clock();
@@ -219,6 +283,7 @@ function frame() {
   time += dt;
 
   const { states, active } = computeStates();
+  activeIndex = active;
 
   // update each chapter (only the visible ones)
   journey.chapters.forEach((ch, i) => {
@@ -228,7 +293,7 @@ function frame() {
       return;
     }
     ch.group.visible = true;
-    ch.update(st.lp, time, st.weight);
+    ch.update(st.lp, time, st.weight, dt);
     setOpacity(ch.group, st.weight);
   });
 

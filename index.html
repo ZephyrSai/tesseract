@@ -26,11 +26,9 @@
     </script>
   </head>
   <body>
-    <!-- fixed WebGL canvas -->
     <canvas id="scene" aria-hidden="true"></canvas>
     <div class="vignette" aria-hidden="true"></div>
 
-    <!-- top controls -->
     <header class="ui ui--top">
       <div class="brand">
         <span class="brand__mark">◈</span>
@@ -40,161 +38,171 @@
         <button id="themeBtn" class="ctrl" aria-label="Toggle light and dark mode">
           <span class="ctrl__icon">◐</span><span class="ctrl__label">Dark</span>
         </button>
-        <button id="soundBtn" class="ctrl" aria-pressed="false" aria-label="Toggle sound">
-          <span class="ctrl__icon">♪</span><span class="ctrl__label">Sound off</span>
+        <button id="soundBtn" class="ctrl" aria-pressed="true" aria-label="Toggle sound">
+          <span class="ctrl__icon">♪</span><span class="ctrl__label">Sound on</span>
         </button>
       </nav>
     </header>
 
-    <!-- progress -->
     <div class="ui ui--progress" aria-hidden="true">
-      <span id="chapterLabel" class="progress__label">0</span>
+      <span id="chapterLabel" class="progress__label">✦</span>
       <div class="progress__track"><div id="progressFill" class="progress__fill"></div></div>
     </div>
 
-    <!-- scrolling narrative -->
     <main>
-      <!-- CH0 -->
+      <!-- 0 -->
       <section class="chapter chapter--hero" data-index="0">
-        <div class="chapter__sticky">
-          <div class="chapter__content">
-            <p class="eyebrow">An interactive journey</p>
-            <h1 class="title title--hero">TESSERACT</h1>
-            <p class="lede">From a single point to the fourth dimension — a voyage through space <em>and</em> time.</p>
-            <blockquote class="quote">
-              “Look again at that dot. That’s here. That’s home. That’s us.”
-              <cite>— Carl Sagan, <i>Pale Blue Dot</i></cite>
-            </blockquote>
-            <p class="scroll-hint" id="hint"><span>Scroll to begin</span><span class="chev">⌄</span><span class="hint-sound">click anywhere for sound ♪</span></p>
-          </div>
-        </div>
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">An interactive journey</p>
+          <h1 class="title title--hero">TESSERACT</h1>
+          <p class="lede">From a single point to the fourth dimension — a voyage through space <em>and</em> time. Scroll to travel; <span class="cue">grab the glowing handles</span> to play.</p>
+          <blockquote class="quote">
+            “Look again at that dot. That’s here. That’s home. That’s us.”
+            <cite>— Carl Sagan, <i>Pale Blue Dot</i></cite>
+          </blockquote>
+          <p class="scroll-hint" id="hint"><span>Scroll to begin</span><span class="chev">⌄</span><span class="hint-sound">sound on ♪ · drag to interact</span></p>
+        </div></div>
       </section>
 
-      <!-- CH1 -->
+      <!-- 1 -->
       <section class="chapter" data-index="1">
-        <div class="chapter__sticky">
-          <div class="chapter__content">
-            <p class="eyebrow">0 · Dimensionless</p>
-            <h2 class="title">The Point</h2>
-            <p class="body">Begin with nothing but a position. No length. No breadth. No depth. A point has zero dimensions — it cannot travel, for there is nowhere yet to go.</p>
-          </div>
-        </div>
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">0 · Dimensionless</p>
+          <h2 class="title">The Point</h2>
+          <p class="body">Begin with nothing but a position — a <em>here</em> with no <em>there</em>. No length, no breadth, no depth: zero dimensions. Ask it to move and the question is meaningless, for there is not yet any direction in which to go. Yet every journey begins exactly here.</p>
+        </div></div>
       </section>
 
-      <!-- CH2 -->
+      <!-- 2 -->
       <section class="chapter" data-index="2">
-        <div class="chapter__sticky">
-          <div class="chapter__content">
-            <p class="eyebrow">1 · Length</p>
-            <h2 class="title">The Line</h2>
-            <p class="body">Now let the point flow. Drag it through the void and it traces a line — the first dimension. A creature here, a <em>Linelander</em>, knows only forward and back. Its whole universe is a single thread, and its neighbours are mere points upon it.</p>
-          </div>
-        </div>
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">1 · Length</p>
+          <h2 class="title">The Line</h2>
+          <p class="body">Now let the point flow. Pull it through the void and it traces a line — the first dimension. A creature here, a <em>Linelander</em>, knows only forward and back; its whole cosmos is a single thread, its neighbours points it can never pass and never see around. <span class="cue">Drag the Linelander</span> along its world — notice it can move just one way.</p>
+        </div></div>
       </section>
 
-      <!-- CH3 -->
+      <!-- 3 -->
       <section class="chapter" data-index="3">
-        <div class="chapter__sticky">
-          <div class="chapter__content">
-            <p class="eyebrow">2 · Length × Breadth</p>
-            <h2 class="title">The Plane</h2>
-            <p class="body">Sweep the line sideways and a plane is born — <em>Flatland</em>. Its citizens glide freely in two directions, yet “up” is a word without meaning. They are shapes living on an endless sheet of graph paper.</p>
-          </div>
-        </div>
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">2 · Length × Breadth</p>
+          <h2 class="title">The Plane</h2>
+          <p class="body">Sweep the line sideways and a plane is born — <em>Flatland</em>, an endless sheet of graph paper. Its citizens glide in two directions, north and east, yet “up” has no meaning to them; they know one another only as glowing edges. <span class="cue">Drag the Flatlander</span> anywhere across its world.</p>
+        </div></div>
       </section>
 
-      <!-- CH4 -->
+      <!-- 4 -->
       <section class="chapter" data-index="4">
-        <div class="chapter__sticky">
-          <div class="chapter__content">
-            <p class="eyebrow">Encounter · 2D → 1D</p>
-            <h2 class="title">A Visitor From Above</h2>
-            <p class="body">To the Flatlander, the Linelander’s entire world is a thread it can see end to end — a god’s-eye view the line-dweller can never share. And when a 2D form drifts across that line, the Linelander sees no shape at all: only a point that appears from nowhere, splits in two, drifts apart, returns, and vanishes. It perceives only <em>slices</em>.</p>
-          </div>
-        </div>
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">Encounter · 2D → 1D</p>
+          <h2 class="title">A Visitor From Above</h2>
+          <p class="body">To the Flatlander, the Linelander’s entire universe is a thread it can take in at a glance — a god’s-eye view the line-dweller can never imagine. And when a flat shape drifts across the line, the Linelander sees no shape at all: a point blinks into being, splits in two, slides apart, returns, and vanishes. <span class="cue">Drag the disc across the line</span> and watch its world. It perceives only <em>slices</em>.</p>
+        </div></div>
       </section>
 
-      <!-- CH5 -->
+      <!-- 5 -->
       <section class="chapter" data-index="5">
-        <div class="chapter__sticky">
-          <div class="chapter__content">
-            <p class="eyebrow">3 · Length × Breadth × Depth</p>
-            <h2 class="title">Space</h2>
-            <p class="body">Lift the plane into the air and depth unfolds. Three dimensions — <em>our</em> dimensions. Here live spheres and cubes and apples: solid things a Flatlander could never hold, only ever meet edge-on.</p>
-          </div>
-        </div>
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">3 · Length × Breadth × Depth</p>
+          <h2 class="title">Space</h2>
+          <p class="body">Lift the plane into the air and a third direction opens — depth — and with it, volume. Three dimensions: <em>our</em> dimensions. Spheres, cubes, apples; rooms, planets, you. Solid things a Flatlander could never grasp, only ever meet edge-on as a line that swells and shrinks.</p>
+        </div></div>
       </section>
 
-      <!-- CH6 -->
+      <!-- 6 -->
       <section class="chapter" data-index="6">
-        <div class="chapter__sticky">
-          <div class="chapter__content">
-            <p class="eyebrow">Demonstration · 3D → 2D</p>
-            <h2 class="title">The Apple in Flatland</h2>
-            <p class="body">Carl Sagan’s apple. Press it to an inked plane and lift it away — it leaves a flat print, a single slice of a solid thing. And were the apple to fall <em>through</em> Flatland, its citizens would witness a shape swelling from a point, blooming, then shrinking to nothing: a 3D object glimpsed only as a parade of 2D cross-sections.</p>
-          </div>
-        </div>
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">Gift of the higher dimension · 3D → 2D</p>
+          <h2 class="title">The Surgeon From Space</h2>
+          <p class="body">Look down on a Flatlander from above and you see everything at once — not just its outline but its <em>insides</em>. Were its heart ever ill, you could reach down and mend it without ever crossing its skin, simply by approaching from a direction it cannot point to. To the Flatlander it would be pure sorcery: a healing from nowhere, by a hand it cannot see.</p>
+        </div></div>
       </section>
 
-      <!-- CH7 -->
+      <!-- 7 -->
       <section class="chapter" data-index="7">
-        <div class="chapter__sticky">
-          <div class="chapter__content">
-            <p class="eyebrow">Bridge · Stacking slices</p>
-            <h2 class="title">Pages of Time</h2>
-            <p class="body">Stack those slices like pages in a book and the solid apple returns. Each page a frozen moment; the thickness of the book, a new direction. Here is the secret — a higher dimension can hold an entire sequence at once, and <em>before</em> and <em>after</em> become merely <em>here</em> and <em>there</em>.</p>
-          </div>
-        </div>
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">Demonstration · 3D → 2D</p>
+          <h2 class="title">The Apple in Flatland</h2>
+          <p class="body">Carl Sagan’s apple. Dip it in ink and press it to the plane: it leaves a flat print — one slice of a solid thing. Now push the apple <em>through</em> Flatland. <span class="cue">Drag the apple up and down</span> through the page. Its citizens witness a shape that blooms from a point, swells to its widest, and dwindles to nothing — a 3D object known only as a parade of 2D cross-sections, never seen whole.</p>
+        </div></div>
       </section>
 
-      <!-- CH8 -->
+      <!-- 8 -->
       <section class="chapter" data-index="8">
-        <div class="chapter__sticky">
-          <div class="chapter__content">
-            <p class="eyebrow">Spacetime · The block universe</p>
-            <h2 class="title">Smeared Across Time</h2>
-            <p class="body">So it is with us. Move through a room and you trace a <em>worldline</em> — a four-dimensional thread through spacetime. We are not points but long, curving filaments, from first breath to last. Yet we read our own story one page at a time, calling each page <em>now</em>.</p>
-          </div>
-        </div>
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">Bridge · Stacking slices</p>
+          <h2 class="title">Pages of Time</h2>
+          <p class="body">Catch each of those slices and stack them, page upon page, and the solid apple returns. <span class="cue">Drag to fan the pages apart</span>, then let them close. Every page is a frozen moment; the thickness of the book, a brand-new direction. Here is the quiet secret: a higher dimension can hold an entire sequence at once. Stack the <em>whens</em> and “before” and “after” become merely <em>here</em> and <em>there</em>.</p>
+        </div></div>
       </section>
 
-      <!-- CH9 -->
+      <!-- 9 -->
       <section class="chapter" data-index="9">
-        <div class="chapter__sticky">
-          <div class="chapter__content">
-            <p class="eyebrow">4 · A new direction</p>
-            <h2 class="title">Perpendicular to Everything</h2>
-            <p class="body">Point, line, square, cube — each dimension is born by dragging the last along a fresh, perpendicular path. So drag the cube in a direction square to all three we know. We cannot point that way. But we can build it by analogy — and the result is the hypercube.</p>
-          </div>
-        </div>
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">Spacetime · The block universe</p>
+          <h2 class="title">Smeared Across Time</h2>
+          <p class="body">So it is with us. Cross a room and you trace a <em>worldline</em> — a four-dimensional thread woven through spacetime. You are not a point but a long, curving filament, from first breath to last. <span class="cue">Drag the glowing “now” along the line.</span> You read your story one page at a time and call that page the present — yet every page, past and future, is already written into the block of spacetime.</p>
+        </div></div>
       </section>
 
-      <!-- CH10 -->
-      <section class="chapter chapter--tall" data-index="10">
-        <div class="chapter__sticky">
-          <div class="chapter__content">
-            <p class="eyebrow">The fourth dimension</p>
-            <h2 class="title">The Tesseract</h2>
-            <p class="body">Eight cubes bound into one. As we draw a 3D cube flattened onto a page, so we see a 4D tesseract pressed into our 3D space — a cube within a cube, forever turning inside out. The inner cube is not small; it is simply <em>farther</em>, in a direction you have never seen.</p>
-          </div>
-        </div>
+      <!-- 10 -->
+      <section class="chapter" data-index="10">
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">4 · A new direction</p>
+          <h2 class="title">Perpendicular to Everything</h2>
+          <p class="body">Point, line, square, cube — each was born the same way: take the shape before it and drag it along a fresh direction, square to all the others. So sweep the cube along a fourth direction, perpendicular to length, breadth <em>and</em> depth at once. No arrow in our world will turn there. But the rules do not stop, and neither will we. The result is the <em>hypercube</em>.</p>
+        </div></div>
       </section>
 
-      <!-- CH11 -->
-      <section class="chapter chapter--hero" data-index="11">
-        <div class="chapter__sticky">
-          <div class="chapter__content">
-            <p class="eyebrow">Home</p>
-            <h2 class="title">The Pale Blue Dot</h2>
-            <p class="body">From a dimensionless point we climbed to the fourth dimension and back. And here we remain — on a mote of dust suspended in a sunbeam, minds bound to three dimensions, dreaming faithfully of more.</p>
-            <blockquote class="quote">
-              “For small creatures such as we, the vastness is bearable only through love.”
-              <cite>— Carl Sagan</cite>
-            </blockquote>
-            <button class="replay" data-scroll-top>↑ Begin again</button>
-            <p class="credit">Built with Three.js · generative ambient audio · light &amp; dark</p>
-          </div>
-        </div>
+      <!-- 11 -->
+      <section class="chapter chapter--tall" data-index="11">
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">The fourth dimension</p>
+          <h2 class="title">The Tesseract</h2>
+          <p class="body">Eight cubes, bound into one. Just as a 3D cube can be drawn flattened onto a page, a 4D tesseract can only be shown pressed into our 3D space — a cube nested within a cube, joined corner to corner, endlessly turning itself inside out. <span class="cue">Grab it and turn it through the fourth dimension.</span> The inner cube is not truly smaller; it is simply <em>farther</em>, set back along the direction you have never seen.</p>
+        </div></div>
+      </section>
+
+      <!-- 12 -->
+      <section class="chapter chapter--tall" data-index="12">
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">Demonstration · 4D → 3D</p>
+          <h2 class="title">A Tesseract Through Our World</h2>
+          <p class="body">Now we are the Flatlanders. Were a tesseract to drift through our three-dimensional world, we could never see the whole of it — only its cross-section, the slice passing through our <em>now</em>. <span class="cue">Drag the tesseract through our space.</span> A solid appears from nothing, twists and swells through impossible shapes, and is gone: a 4D form glimpsed only as a parade of 3D slices — exactly as the apple appeared to Flatland.</p>
+        </div></div>
+      </section>
+
+      <!-- 13 -->
+      <section class="chapter chapter--tall" data-index="13">
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">Unfolding</p>
+          <h2 class="title">The Hypercube, Unfolded</h2>
+          <p class="body">Cut a cube along its edges and it unfolds into a flat cross of six squares — a shape any Flatlander could lay out, though never fold back into a box. Unfold a tesseract the same way and it opens into a three-dimensional cross of <em>eight cubes</em> — the shape Salvador Dalí hung his Christ upon. <span class="cue">Drag to fold and unfold it.</span> We can build the cross with our hands; the folding, only in our minds.</p>
+        </div></div>
+      </section>
+
+      <!-- 14 -->
+      <section class="chapter" data-index="14">
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">Consequences · Beyond our walls</p>
+          <h2 class="title">What the Fourth Could Do</h2>
+          <p class="body">What could a creature of four dimensions do? It could see every page of your life at once. It could lift you out of a locked room without opening the door — stepping around our walls through a direction we cannot guard. It could take the yolk from an unbroken egg, untie any knot without freeing its ends, read a closed book, or still a heart without breaking the skin. To us, a ghost, a magician, a god. To it, the simplest reach.</p>
+        </div></div>
+      </section>
+
+      <!-- 15 -->
+      <section class="chapter chapter--hero" data-index="15">
+        <div class="chapter__sticky"><div class="chapter__content">
+          <p class="eyebrow">Home</p>
+          <h2 class="title">The Pale Blue Dot</h2>
+          <p class="body">From a dimensionless point we climbed, dimension by dimension, to the fourth — and home again. And here we remain: three-dimensional minds adrift on a mote of dust suspended in a sunbeam, able to <em>imagine</em> the directions we can never enter. Perhaps that is the most human thing of all — to stand inside our small allotment of space and time, and dream, faithfully, of more.</p>
+          <blockquote class="quote">
+            “For small creatures such as we, the vastness is bearable only through love.”
+            <cite>— Carl Sagan</cite>
+          </blockquote>
+          <button class="replay" data-scroll-top>↑ Begin again</button>
+          <p class="credit">Built with Three.js · generative ambient audio · drag to interact · light &amp; dark</p>
+        </div></div>
       </section>
     </main>
 

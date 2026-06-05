@@ -102,9 +102,10 @@ main { position: relative; z-index: 2; }
   pointer-events: none;
 }
 /* alternate side placement for rhythm; centre the heroes */
-.chapter[data-index="2"] .chapter__content,
-.chapter[data-index="5"] .chapter__content,
-.chapter[data-index="8"] .chapter__content { margin-left: auto; text-align: right; }
+.chapter[data-index="3"] .chapter__content,
+.chapter[data-index="6"] .chapter__content,
+.chapter[data-index="9"] .chapter__content,
+.chapter[data-index="12"] .chapter__content { margin-left: auto; text-align: right; }
 .chapter--hero .chapter__sticky { justify-content: center; text-align: center; }
 .chapter--hero .chapter__content { text-align: center; }
 
@@ -156,6 +157,16 @@ main { position: relative; z-index: 2; }
   font-weight: 300;
 }
 .body em { font-style: italic; color: var(--ink); font-weight: 400; }
+
+/* interaction cue — signals a draggable hotspot in the scene */
+.cue {
+  color: var(--accent);
+  font-style: normal;
+  font-weight: 500;
+  border-bottom: 1px dashed currentColor;
+  padding-bottom: 1px;
+}
+.cue::before { content: "✦ "; font-size: 0.85em; opacity: 0.85; }
 
 .quote {
   font-family: var(--serif);
@@ -285,13 +296,24 @@ main { position: relative; z-index: 2; }
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
 }
 
+/* while dragging a hotspot: lock scroll + show grab cursor everywhere */
+html.is-dragging,
+html.is-dragging body {
+  cursor: grabbing !important;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
 @media (max-width: 640px) {
   .ctrl__label { display: none; }
   .ctrl { padding: 0.6rem; }
   .progress__label { min-width: 4rem; font-size: 0.72rem; }
-  .chapter[data-index="2"] .chapter__content,
-  .chapter[data-index="5"] .chapter__content,
-  .chapter[data-index="8"] .chapter__content { text-align: left; margin-left: 0; }
+  .chapter[data-index="3"] .chapter__content,
+  .chapter[data-index="6"] .chapter__content,
+  .chapter[data-index="9"] .chapter__content,
+  .chapter[data-index="12"] .chapter__content { text-align: left; margin-left: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

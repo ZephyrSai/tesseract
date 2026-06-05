@@ -1,5 +1,6 @@
 // tesseract.js — a 4D hypercube: 4D rotation, perspective projection 4D->3D,
 // rendered as glowing fat lines + node sprites. Three.js then projects 3D->2D.
+// Also exports the raw 4D helpers so other scenes can slice a tesseract.
 
 import * as THREE from 'three';
 import { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
@@ -7,32 +8,27 @@ import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 
 // 16 vertices: every (+-1, +-1, +-1, +-1)
-function makeVertices() {
+export function makeVertices() {
   const v = [];
   for (let i = 0; i < 16; i++) {
-    v.push([
-      i & 1 ? 1 : -1,
-      i & 2 ? 1 : -1,
-      i & 4 ? 1 : -1,
-      i & 8 ? 1 : -1,
-    ]);
+    v.push([i & 1 ? 1 : -1, i & 2 ? 1 : -1, i & 4 ? 1 : -1, i & 8 ? 1 : -1]);
   }
   return v;
 }
 
 // edges connect vertices differing in exactly one coordinate (32 edges)
-function makeEdges() {
+export function makeEdges() {
   const e = [];
   for (let i = 0; i < 16; i++) {
     for (let j = i + 1; j < 16; j++) {
-      let diff = i ^ j;
-      if (diff && (diff & (diff - 1)) === 0) e.push([i, j]); // power of two -> 1 bit
+      const diff = i ^ j;
+      if (diff && (diff & (diff - 1)) === 0) e.push([i, j]);
     }
   }
   return e;
 }
 
-function rot(p, i, j, ang) {
+export function rot4(p, i, j, ang) {
   const c = Math.cos(ang),
     s = Math.sin(ang);
   const a = p[i],
@@ -52,8 +48,7 @@ function glowSprite() {
   grd.addColorStop(1, 'rgba(255,255,255,0)');
   g.fillStyle = grd;
   g.fillRect(0, 0, 128, 128);
-  const t = new THREE.CanvasTexture(c);
-  return t;
+  return new THREE.CanvasTexture(c);
 }
 
 export function buildTesseract(palette) {
@@ -84,7 +79,6 @@ export function buildTesseract(palette) {
   lines.frustumCulled = false;
   group.add(lines);
 
-  // node points
   const nodeGeo = new THREE.BufferGeometry();
   const nodePos = new Float32Array(16 * 3);
   const nodeCol = new Float32Array(16 * 3);
@@ -111,7 +105,6 @@ export function buildTesseract(palette) {
   function applyPalette(p) {
     cFar.setHex(p.primary);
     cNear.setHex(p.accent);
-    // additive glow in the dark; solid ink on light paper
     const add = p.name === 'dark';
     mat.blending = add ? THREE.AdditiveBlending : THREE.NormalBlending;
     nodeMat.blending = add ? THREE.AdditiveBlending : THREE.NormalBlending;
@@ -120,16 +113,19 @@ export function buildTesseract(palette) {
   }
   applyPalette(palette);
 
-  const W_DIST = 2.7; // 4D camera distance along w
+  const W_DIST = 2.7;
   const SCALE = 1.55;
-
   const p4 = [0, 0, 0, 0];
 
-  function update(time, lp, opacity = 1) {
-    mat.opacity = opacity;
-    nodeMat.opacity = opacity;
+  // user-controlled 4D rotation offsets (from dragging)
+  let uXW = 0,
+    uYW = 0;
+  function addUser(dx, dy) {
+    uXW += dx;
+    uYW += dy;
+  }
 
-    // angles — a layered double rotation, with extra spin driven by scroll.
+  function update(time, lp, opacity = 1) {
     const spin = 1 + lp * 0.6;
     const aXW = time * 0.28 * spin + lp * Math.PI;
     const aYZ = time * 0.17 * spin;
@@ -145,10 +141,12 @@ export function buildTesseract(palette) {
       p4[1] = verts[i][1];
       p4[2] = verts[i][2];
       p4[3] = verts[i][3];
-      rot(p4, 0, 3, aXW);
-      rot(p4, 1, 2, aYZ);
-      rot(p4, 2, 3, aZW);
-      rot(p4, 0, 1, aXY);
+      rot4(p4, 0, 3, aXW);
+      rot4(p4, 1, 2, aYZ);
+      rot4(p4, 2, 3, aZW);
+      rot4(p4, 0, 1, aXY);
+      rot4(p4, 0, 3, uXW);
+      rot4(p4, 1, 3, uYW);
 
       const f = (1 / (W_DIST - p4[3])) * SCALE;
       const x = p4[0] * f;
@@ -156,7 +154,6 @@ export function buildTesseract(palette) {
       const z = p4[2] * f;
       proj[i] = { x, y, z, w: p4[3] };
 
-      // node buffers
       nodePos[i * 3] = x;
       nodePos[i * 3 + 1] = y;
       nodePos[i * 3 + 2] = z;
@@ -177,7 +174,6 @@ export function buildTesseract(palette) {
       positions[pi++] = B.x;
       positions[pi++] = B.y;
       positions[pi++] = B.z;
-
       const ta = THREE.MathUtils.clamp((A.w + 1.4) / 2.8, 0, 1);
       const tb = THREE.MathUtils.clamp((B.w + 1.4) / 2.8, 0, 1);
       cTmp.copy(cFar).lerp(cNear, ta);
@@ -194,17 +190,14 @@ export function buildTesseract(palette) {
     geo.setColors(colors);
     nodeGeo.attributes.position.needsUpdate = true;
     nodeGeo.attributes.color.needsUpdate = true;
-
     group.rotation.y = time * 0.05;
   }
 
-  function setResolution(w, h) {
-    mat.resolution.set(w, h);
-  }
-
-  function recolor(p) {
-    applyPalette(p);
-  }
-
-  return { group, update, setResolution, recolor };
+  return {
+    group,
+    update,
+    addUser,
+    setResolution: (w, h) => mat.resolution.set(w, h),
+    recolor: (p) => applyPalette(p),
+  };
 }
