@@ -1,0 +1,300 @@
+/* ========== theme tokens ========== */
+:root {
+  --serif: "Fraunces", Georgia, "Times New Roman", serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html[data-theme="dark"] {
+  --bg: #05060c;
+  --ink: #eef2ff;
+  --ink-soft: #aeb8d8;
+  --ink-faint: #6b769c;
+  --accent: #6fe3ff;
+  --accent-2: #b98bff;
+  --panel: rgba(18, 22, 40, 0.5);
+  --panel-brd: rgba(150, 180, 255, 0.16);
+  --panel-hi: rgba(150, 180, 255, 0.28);
+  --quote: #ffd79a;
+  --shadow: rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme="light"] {
+  --bg: #eaf0fb;
+  --ink: #161a2b;
+  --ink-soft: #41496a;
+  --ink-faint: #8a93b4;
+  --accent: #0a6cf0;
+  --accent-2: #7a3df0;
+  --panel: rgba(255, 255, 255, 0.62);
+  --panel-brd: rgba(40, 70, 140, 0.16);
+  --panel-hi: rgba(40, 70, 140, 0.3);
+  --quote: #b4560a;
+  --shadow: rgba(40, 60, 110, 0.18);
+}
+
+/* ========== base ========== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  transition: background 0.8s var(--ease), color 0.8s var(--ease);
+}
+
+#scene {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 0;
+  display: block;
+}
+
+/* soft cinematic vignette over the canvas */
+.vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(120% 100% at 50% 40%, transparent 55%, var(--bg) 130%);
+  opacity: 0.85;
+  transition: background 0.8s var(--ease);
+}
+
+main { position: relative; z-index: 2; }
+
+/* ========== chapters ========== */
+.chapter { position: relative; height: 210vh; }
+.chapter--tall { height: 260vh; }
+.chapter--hero { height: 175vh; }
+
+.chapter__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  padding: clamp(1.4rem, 5vw, 6rem);
+}
+
+.chapter__content {
+  max-width: 38rem;
+  will-change: opacity, transform;
+  position: relative;
+}
+/* soft, blurred scrim in the bg colour so copy stays legible over bright 3D */
+.chapter__content::before {
+  content: "";
+  position: absolute;
+  inset: -12% -9%;
+  z-index: -1;
+  background: radial-gradient(68% 60% at 50% 50%, var(--bg) 0%, transparent 72%);
+  opacity: 0.5;
+  filter: blur(26px);
+  pointer-events: none;
+}
+/* alternate side placement for rhythm; centre the heroes */
+.chapter[data-index="2"] .chapter__content,
+.chapter[data-index="5"] .chapter__content,
+.chapter[data-index="8"] .chapter__content { margin-left: auto; text-align: right; }
+.chapter--hero .chapter__sticky { justify-content: center; text-align: center; }
+.chapter--hero .chapter__content { text-align: center; }
+
+/* ========== typography ========== */
+/* halo so copy stays legible over bright 3D — a soft scrim in the bg colour */
+.eyebrow, .body, .lede, .quote, .scroll-hint, .credit, .title {
+  text-shadow: 0 0 14px var(--bg), 0 0 30px var(--bg), 0 1px 3px var(--bg);
+}
+
+.eyebrow {
+  font-size: clamp(0.7rem, 1.4vw, 0.82rem);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 1.1rem;
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 380;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  font-size: clamp(2.6rem, 8vw, 5.6rem);
+  margin-bottom: 1.3rem;
+  text-shadow: 0 0 18px var(--bg), 0 0 44px var(--bg), 0 2px 40px var(--shadow);
+}
+.title--hero {
+  font-size: clamp(3.4rem, 13vw, 9rem);
+  letter-spacing: 0.04em;
+  font-weight: 360;
+}
+
+.lede {
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 2.6vw, 1.5rem);
+  font-weight: 300;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  max-width: 30rem;
+  margin: 0 auto 2rem;
+}
+.lede em { font-style: italic; color: var(--ink); }
+
+.body {
+  font-size: clamp(1rem, 2.2vw, 1.22rem);
+  line-height: 1.72;
+  color: var(--ink-soft);
+  font-weight: 300;
+}
+.body em { font-style: italic; color: var(--ink); font-weight: 400; }
+
+.quote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.1rem, 3vw, 1.7rem);
+  line-height: 1.5;
+  color: var(--quote);
+  max-width: 32rem;
+  margin: 2rem auto 0;
+}
+.quote cite {
+  display: block;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  font-style: normal;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.quote cite i { text-transform: none; letter-spacing: normal; }
+
+/* scroll hint */
+.scroll-hint {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-faint);
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  transition: opacity 0.8s var(--ease);
+}
+.scroll-hint .chev { font-size: 1.4rem; animation: bob 1.8s var(--ease) infinite; }
+.scroll-hint .hint-sound { font-size: 0.66rem; letter-spacing: 0.18em; opacity: 0.7; animation: pulse 2.6s ease-in-out infinite; }
+.scroll-hint.hidden { opacity: 0; pointer-events: none; }
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
+@keyframes pulse { 0%,100% { opacity: 0.35; } 50% { opacity: 0.85; } }
+
+.replay {
+  margin-top: 2.2rem;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--panel-hi);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.replay:hover { transform: translateY(-2px); border-color: var(--accent); }
+.credit { margin-top: 1.6rem; font-size: 0.72rem; letter-spacing: 0.14em; color: var(--ink-faint); }
+
+/* ========== UI chrome ========== */
+.ui { position: fixed; z-index: 10; }
+.ui--top {
+  top: 0; left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(1rem, 3vw, 1.8rem) clamp(1.2rem, 4vw, 2.4rem);
+  pointer-events: none;
+}
+.ui--top > * { pointer-events: auto; }
+
+.brand { display: flex; align-items: center; gap: 0.55rem; }
+.brand__mark { color: var(--accent); font-size: 1.1rem; animation: spin 14s linear infinite; }
+.brand__name { font-size: 0.78rem; letter-spacing: 0.34em; font-weight: 500; color: var(--ink-soft); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.controls { display: flex; gap: 0.6rem; }
+.ctrl {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  background: var(--panel);
+  border: 1px solid var(--panel-brd);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.3s, border-color 0.3s, transform 0.3s var(--ease);
+}
+.ctrl:hover { color: var(--ink); border-color: var(--panel-hi); transform: translateY(-1px); }
+.ctrl__icon { font-size: 0.95rem; line-height: 1; }
+#soundBtn.is-on { color: var(--accent); border-color: var(--panel-hi); }
+#soundBtn.is-on .ctrl__icon { animation: pulse 1.6s ease-in-out infinite; }
+
+/* progress */
+.ui--progress {
+  bottom: 0; left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0 clamp(1.2rem, 4vw, 2.4rem) clamp(0.9rem, 2.5vw, 1.4rem);
+}
+.progress__label {
+  font-family: var(--serif);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: var(--ink-faint);
+  min-width: 5.5rem;
+  font-style: italic;
+}
+.progress__track {
+  flex: 1;
+  height: 2px;
+  background: var(--panel-brd);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress__fill {
+  height: 100%;
+  width: 100%;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+@media (max-width: 640px) {
+  .ctrl__label { display: none; }
+  .ctrl { padding: 0.6rem; }
+  .progress__label { min-width: 4rem; font-size: 0.72rem; }
+  .chapter[data-index="2"] .chapter__content,
+  .chapter[data-index="5"] .chapter__content,
+  .chapter[data-index="8"] .chapter__content { text-align: left; margin-left: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .chev, .hint-sound, .brand__mark, #soundBtn.is-on .ctrl__icon { animation: none; }
+}
