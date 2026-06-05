@@ -141,6 +141,16 @@ function setSoundUI(on) {
 audio.onState(setSoundUI);
 setSoundUI(true); // sound is on by default; it begins on the first interaction
 
+// Pulse the ♪ control until audio is truly running. On mobile, autoplay needs a
+// gesture; if scroll/tap doesn't unlock it, this makes the one-tap fix obvious.
+soundBtn.classList.add('is-pending');
+const _soundPoll = setInterval(() => {
+  if (audio.ctx && audio.ctx.state === 'running') {
+    soundBtn.classList.remove('is-pending');
+    clearInterval(_soundPoll);
+  }
+}, 350);
+
 soundBtn.addEventListener('click', () => {
   audioStarted = true;
   hideHint();

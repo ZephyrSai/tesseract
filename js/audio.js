@@ -31,12 +31,34 @@ export class AudioEngine {
     if (this._onState) this._onState(this.playing);
   }
 
+  _ensureCtx() {
+    if (this.ctx) return;
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    this.ctx = new Ctx();
+  }
+
+  // Call SYNCHRONOUSLY inside a user gesture. Resumes the context and plays a
+  // 1-sample silent buffer — the kick that unlocks Web Audio on iOS Safari and
+  // several Android browsers. Safe to call repeatedly.
+  resumeNow() {
+    try {
+      this._ensureCtx();
+      const ctx = this.ctx;
+      if (ctx.state !== 'running' && ctx.resume) ctx.resume();
+      const b = ctx.createBuffer(1, 1, 22050);
+      const s = ctx.createBufferSource();
+      s.buffer = b;
+      s.connect(ctx.destination);
+      s.start(0);
+    } catch (e) {}
+  }
+
   // Build the whole graph once, on first user gesture.
   _init() {
     if (this.started) return;
     this.started = true;
-    const Ctx = window.AudioContext || window.webkitAudioContext;
-    const ctx = (this.ctx = new Ctx());
+    this._ensureCtx();
+    const ctx = this.ctx;
 
     // Random musical identity for this load.
     const rng = (this.rng = mulb(((Math.random() * 1e9) | 0) ^ Date.now()));
@@ -273,8 +295,9 @@ export class AudioEngine {
   }
 
   async play() {
+    this.resumeNow(); // synchronous unlock within the gesture (iOS/Android)
     this._init();
-    if (this.ctx.state === 'suspended') await this.ctx.resume();
+    try { if (this.ctx.state === 'suspended') await this.ctx.resume(); } catch (e) {}
     if (this.playing) return;
     this.playing = true;
     this._setVoiceLevels(true);

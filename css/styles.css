@@ -286,6 +286,13 @@ main { position: relative; z-index: 2; }
 .ctrl__icon { font-size: 0.95rem; line-height: 1; }
 #soundBtn.is-on { color: var(--accent); border-color: var(--panel-hi); }
 #soundBtn.is-on .ctrl__icon { animation: pulse 1.6s ease-in-out infinite; }
+/* draws attention until audio actually unlocks (mobile needs a tap) */
+#soundBtn.is-pending { color: var(--accent); border-color: currentColor; animation: tapRing 1.8s ease-out infinite; }
+#soundBtn.is-pending .ctrl__icon { animation: pulse 1.1s ease-in-out infinite; }
+@keyframes tapRing {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); }
+  70%, 100% { box-shadow: 0 0 0 12px color-mix(in srgb, var(--accent) 0%, transparent); }
+}
 
 /* progress */
 .ui--progress {
